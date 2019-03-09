@@ -2,7 +2,7 @@
   "name": "bloccit",
   "version": "1.0.0",
   "description": "A Reddit-like application for users to discuss and share content",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "set NODE_ENV=test && jasmine",
     "start": "node src/server.js"
