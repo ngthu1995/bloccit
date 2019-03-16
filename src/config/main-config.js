@@ -15,8 +15,7 @@ module.exports = {
     app.use(express.static(path.join(__dirname, "..", "assets")));
     app.use(
       session({
-        secret: "String for encrypting cookies.",
-        name: "Cookie_name",
+        secret: "process.env.SECRET",
         resave: false,
         saveUninitialized: false,
         cookie: { maxAge: 60000 }
