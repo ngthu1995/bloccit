@@ -167,14 +167,17 @@ describe("routes : posts", () => {
         }
       };
       request.post(options, (err, res, body) => {
-        expect(err).toBeNull();
-
-        Post.findOne({
-          where: { id: this.post.id }
-        }).then(post => {
-          expect(post.title).toBe("Snowman Building Competition");
-          done();
-        });
+        Post.findById({ where: { id: this.post.id } })
+          .then(post => {
+            expect(post).not.toBeNull();
+            expect(post.title).toBe("Snowman Building Competition");
+            expect(post.topicId).not.toBeNull();
+            done();
+          })
+          .catch(err => {
+            console.log(err);
+            done();
+          });
       });
     });
   });
