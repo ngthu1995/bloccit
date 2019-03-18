@@ -1,6 +1,5 @@
 const postQueries = require("../db/queries.posts.js");
-const Authorizer = require("../policies/topic");
-
+const Authorizer = require("../policies/post");
 module.exports = {
   new(req, res, next) {
     const authorized = new Authorizer(req.user).new();
@@ -11,10 +10,9 @@ module.exports = {
       res.redirect("/topics");
     }
   },
+
   create(req, res, next) {
     const authorized = new Authorizer(req.user).create();
-
-    // #2
     if (authorized) {
       let newPost = {
         title: req.body.title,
@@ -30,11 +28,11 @@ module.exports = {
         }
       });
     } else {
-      // #3
       req.flash("notice", "You are not authorized to do that.");
       res.redirect("/topics");
     }
   },
+
   show(req, res, next) {
     postQueries.getPost(req.params.id, (err, post) => {
       if (err || post == null) {
@@ -44,6 +42,7 @@ module.exports = {
       }
     });
   },
+
   destroy(req, res, next) {
     postQueries.deletePost(req, (err, deletedRecordsCount) => {
       if (err) {
@@ -56,15 +55,23 @@ module.exports = {
       }
     });
   },
+
   edit(req, res, next) {
     postQueries.getPost(req.params.id, (err, post) => {
       if (err || post == null) {
         res.redirect(404, "/");
       } else {
-        res.render("posts/edit", { post });
+        const authorized = new Authorizer(req.user, post).edit();
+        if (authorized) {
+          res.render("posts/edit", { post });
+        } else {
+          req.flash("You are not authorized to do that.");
+          res.redirect(`/topics/${req.params.topicId}`);
+        }
       }
     });
   },
+
   update(req, res, next) {
     postQueries.updatePost(req, req.body, (err, post) => {
       if (err || post == null) {
