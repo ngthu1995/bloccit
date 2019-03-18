@@ -9,7 +9,6 @@
     <main class="container">
       <% include ../static/partials/messages.ejs %>
       <h1>Edit Post</h1>
-
       <form
         action="/topics/<%= post.topicId %>/posts/<%= post.id %>/update"
         method="post"
@@ -39,7 +38,7 @@
 <%= post.body %></textarea
           >
           <small class="text-muted" id="bodyHelp"
-            >title must be 10 or more characters in length.</small
+            >body must be 10 or more characters in length.</small
           >
         </div>
         <button type="submit" class="btn btn-primary">Update</button>

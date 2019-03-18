@@ -44,7 +44,7 @@ describe("routes : posts", () => {
       });
     });
   });
-  //admin user
+
   describe("admin user performing CRUD actions for Topic", () => {
     beforeEach(done => {
       User.create({
@@ -208,10 +208,9 @@ describe("routes : posts", () => {
     });
   });
 
-  //member
   describe("member user performing CRUD actions for Post", () => {
     beforeEach(done => {
-      // before each suite in user context
+      // before each suite in admin context
       request.get({
         url: "http://localhost:3000/auth/fake",
         form: {
@@ -244,7 +243,7 @@ describe("routes : posts", () => {
         request.post(options, (err, res, body) => {
           Post.findOne({ where: { title: "Watching snow melt" } })
             .then(post => {
-              expect(post).not.toBe(false);
+              //expect(post).not.toBe(false);
               expect(post.title).toBe("Watching snow melt");
               expect(post.body).toBe(
                 "Without a doubt my favoriting things to do besides watching paint dry!"
@@ -326,20 +325,23 @@ describe("routes : posts", () => {
     });
 
     describe("POST /topics/:topicId/posts/:id/update", () => {
-      it("should return a status code 302", done => {
-        request.post(
-          {
-            url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
-            form: {
-              title: "Snowman Building Competition",
-              body: "I love watching them melt slowly."
-            }
-          },
-          (err, res, body) => {
-            expect(res.statusCode).toBe(302);
-            done();
+      it("should not update the post with the given values", done => {
+        const options = {
+          url: `${base}/${this.topic.id}/posts/${this.post.id}/update`,
+          form: {
+            title: "Snowman Building Competition",
+            body: "I love watching them melt slowly."
           }
-        );
+        };
+        request.post(options, (err, res, body) => {
+          expect(err).toBeNull();
+          Post.findOne({
+            where: { id: this.post.id }
+          }).then(post => {
+            expect(post.title).toBe("Snowball Fighting"); // confirm title is unchanged
+            done();
+          });
+        });
       });
     });
   });
