@@ -73,7 +73,7 @@ module.exports = {
   },
 
   update(req, res, next) {
-    postQueries.updatePost(req, req.body, (err, post) => {
+    postQueries.updatePost(req.params.id, req.body, (err, post) => {
       if (err || post == null) {
         res.redirect(
           404,
