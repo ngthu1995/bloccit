@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "postId",
       as: "votes"
     });
+    Post.hasMany(models.Favorite, {
+      foreignKey: "postId",
+      as: "favorites"
+    });
     Post.prototype.getPoints = function() {
       // #1
       if (this.votes.length === 0) return 0;
