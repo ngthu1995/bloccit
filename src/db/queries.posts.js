@@ -17,7 +17,13 @@ module.exports = {
   getPost(id, callback) {
     return Post.findById(id, {
       include: [{ model: Comment, as: "comments", include: [{ model: User }] }]
-    });
+    })
+      .then(post => {
+        callback(null, post);
+      })
+      .catch(err => {
+        callback(err);
+      });
   },
   deletePost(req, callback) {
     return Post.findById(req.params.id)
