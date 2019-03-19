@@ -92,6 +92,18 @@ describe("Vote", () => {
         });
     });
 
+    it("should not create a vote if the value is other than 1 and -1", done => {
+      Vote.create({
+        value: 2,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+        .then(vote => {})
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
     // #5
     it("should create a downvote on a post for a user", done => {
       Vote.create({
@@ -231,6 +243,65 @@ describe("Vote", () => {
             expect(associatedPost.title).toBe(
               "My first visit to Proxima Centauri b"
             );
+            done();
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+  });
+
+  describe("#getPoints()", () => {
+    it("should return the total points for a given post", done => {
+      Vote.create({
+        value: 1,
+        userId: this.user.id,
+        postId: this.post.id
+      })
+        .then(vote => {
+          let totalPoints = this.post.getPoints();
+          expect(totalPoints).toBe(1);
+          done();
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+  });
+
+  describe("#hasUpvoteFor()", () => {
+    it("should return true if the associated user has an upvote for the post", done => {
+      Vote.create({
+        value: 1,
+        userId: this.user.id,
+        postId: this.post.id
+      })
+        .then(vote => {
+          vote.postId.hasUpvoteFor().then(associatedPost => {
+            expect(this.votes).toBe(true);
+            done();
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+  });
+
+  describe("#hasDownvoteFor()", () => {
+    it("should return true if the associated user has a downvote for the post", done => {
+      Vote.create({
+        value: -1,
+        userId: this.user.id,
+        postId: this.post.id
+      })
+        .then(vote => {
+          vote.postId.hasUpvoteFor().then(associatedPost => {
+            expect(this.votes).toBe(true);
             done();
           });
         })
