@@ -57,7 +57,7 @@ describe("routes : favorites", () => {
   });
 
   //context suites here
-  describe("guest attempting to favorite on a post", done => {
+  describe("guest attempting to favorite on a post", () => {
     beforeEach(done => {
       request.get(
         {
@@ -100,6 +100,7 @@ describe("routes : favorites", () => {
     });
   });
 
+  // Define a suite to describe a signed in user attempting to favorite a post.
   describe("signed in user favoriting a post", () => {
     beforeEach(done => {
       // before each suite in this context
@@ -151,7 +152,7 @@ describe("routes : favorites", () => {
           url: `${base}${this.topic.id}/posts/${this.post.id}/favorites/create`
         };
 
-        let favCountBeforeDelete;
+        let favCountBeforeDelete = 0;
 
         request.post(options, (err, res, body) => {
           this.post.getFavorites().then(favorites => {
